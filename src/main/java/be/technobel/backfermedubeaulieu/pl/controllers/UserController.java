@@ -26,7 +26,7 @@ public class UserController {
         return ResponseEntity.ok(userService.login(form));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public void register(@RequestBody @Valid RegisterForm form) {
         userService.register(form);
