@@ -2,6 +2,7 @@ package be.technobel.backfermedubeaulieu.dal.models;
 
 import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
