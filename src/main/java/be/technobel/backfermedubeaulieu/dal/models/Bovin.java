@@ -8,11 +8,12 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Bovin {
+public abstract class Bovin {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private int loopNumber;
+    private String coat;
     private boolean gender;
     @Temporal(value = TemporalType.DATE)
     private LocalDate birthDate;
