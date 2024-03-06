@@ -1,5 +1,6 @@
 package be.technobel.backfermedubeaulieu.pl.models.forms.createBovin;
 
+import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.PastOrPresent;
@@ -8,15 +9,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * DTO for {@link be.technobel.backfermedubeaulieu.dal.models.Bovin}
+ * DTO for {@link be.technobel.backfermedubeaulieu.dal.models.Bull}
  */
-public record BovinForm(@Min(message = "Trop court", value = 4)
-                        @Max(message = "Trop long", value = 4)
-                        int loopNumber,
+public record BovinForm(
+                        String loopNumber,
                         String coat,
                         boolean gender,
                         @PastOrPresent(message = "Date future impossible") LocalDate birthDate,
                         boolean cesarean,
-                        CowBovinForm mother
+                        String motherLoopNumber
 ) implements Serializable {
 }

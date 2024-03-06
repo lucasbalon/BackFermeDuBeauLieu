@@ -12,7 +12,7 @@ public class Injection {
     @Temporal(TemporalType.DATE)
     private LocalDate injectionDate;
     @ManyToOne
-    private Bovin bovin;
+    private Bull bovin;
     @ManyToOne
     private Substance substance;
 }

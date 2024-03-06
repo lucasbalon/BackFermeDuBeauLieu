@@ -19,7 +19,7 @@ public class BovinController {
     }
 
     @GetMapping("/{loopNumber}")
-    public ResponseEntity<List<BovinSearchDTO>> findBovinsByLoopNumber(@PathVariable int loopNumber) {
+    public ResponseEntity<List<BovinSearchDTO>> findBovinsByLoopNumber(@PathVariable String loopNumber) {
         return ResponseEntity.ok(bovinService.findBovinsByLoopNumber(loopNumber));
     }
 

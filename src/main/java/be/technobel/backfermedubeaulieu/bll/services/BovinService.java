@@ -7,6 +7,6 @@ import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.BovinForm;
 import java.util.List;
 
 public interface BovinService {
-    List<BovinSearchDTO> findBovinsByLoopNumber(int loopNumber);
+    List<BovinSearchDTO> findBovinsByLoopNumber(String loopNumber);
     void createBovin(BovinForm bovinForm);
 }
