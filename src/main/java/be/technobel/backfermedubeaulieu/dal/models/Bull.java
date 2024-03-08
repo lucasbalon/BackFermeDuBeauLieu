@@ -29,8 +29,10 @@ public class Bull{
     @Enumerated(EnumType.STRING)
     private Status status;
     @ManyToOne
+    @JoinColumn(nullable = true)
     private Bull father;
     @ManyToOne
+    @JoinColumn(nullable = true)
     private Cow mother;
     @ManyToOne
     private Pasture pasture;
