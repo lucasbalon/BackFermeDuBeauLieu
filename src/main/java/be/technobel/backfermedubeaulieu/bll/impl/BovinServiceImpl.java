@@ -14,8 +14,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BovinServiceImpl implements BovinService {
@@ -71,7 +73,23 @@ public class BovinServiceImpl implements BovinService {
 
     }
 
+    @Override
+    public String[] findAllBovinsLoopNumber() {
+        return bullRepository.findAllBovinsLoopNumber();
+    }
+
+    @Override
+    public ArrayList<BovinSearchDTO> findAllBovins() {
+        ArrayList<BovinSearchDTO> all = new ArrayList<>();
+        all.addAll(cowRepository.findAll().stream().map(BovinSearchDTO::fromEntity).toList());
+        all.addAll(bullRepository.findAll().stream().map(BovinSearchDTO::fromEntity).toList());
+        return all;
+    }
+
     private Bull findFather(BovinForm bovinForm) {
+        if (findMother(bovinForm).getPasture() == null) {
+            throw new EntityNotFoundException("La vache mère n'a pas de pature attribuée");
+        }
         Bull bull = findMother(bovinForm).getPasture().getBovins()
                 .stream()
                 .filter(bovin -> !(bovin instanceof Cow))
@@ -83,7 +101,12 @@ public class BovinServiceImpl implements BovinService {
     }
 
     private Cow findMother(BovinForm bovinForm) {
-        return cowRepository.findByLoopNumber(bovinForm.motherLoopNumber())
-                .orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));
+        try {
+            return cowRepository.findByLoopNumber(bovinForm.motherLoopNumber())
+                    .orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));
+        }catch (ClassCastException exception) {
+            throw new EntityNotFoundException("La mère n'est pas une vache");
+        }
+
     }
 }

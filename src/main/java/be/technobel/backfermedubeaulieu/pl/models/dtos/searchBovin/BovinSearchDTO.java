@@ -17,7 +17,7 @@ public record BovinSearchDTO(
         boolean gender,
         String coat,
         LocalDate birthDate,
-        PastureSearchDTO pasture
+        String pasture
 ){
     public static BovinSearchDTO fromEntity(Bull bull) {
         return BovinSearchDTO.builder()
@@ -26,7 +26,7 @@ public record BovinSearchDTO(
                 .gender(bull.isGender())
                 .coat(bull.getCoat())
                 .birthDate(bull.getBirthDate())
-                .pasture(new PastureSearchDTO(bull.getPasture().getName()))
+                .pasture(bull.getPasture() != null ? bull.getPasture().getName() : "Pature non définie")
                 .build();
     }
 }
