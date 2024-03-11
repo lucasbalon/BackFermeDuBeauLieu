@@ -14,5 +14,5 @@ public class Sale {
     private int carrierNumber;
     private int customerNumber;
     @OneToOne
-    private Bovin bovin;
+    private Bull bovin;
 }

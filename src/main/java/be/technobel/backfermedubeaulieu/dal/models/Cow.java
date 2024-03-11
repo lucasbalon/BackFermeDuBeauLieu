@@ -1,14 +1,16 @@
 package be.technobel.backfermedubeaulieu.dal.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
-public class Cow extends Bovin{
+@AllArgsConstructor
+@NoArgsConstructor
+public class Cow extends Bull{
     @OneToMany(mappedBy = "cow")
     private List<Scan> scans;
-    @OneToMany(mappedBy = "mother")
-    private List<Bovin> children;
 }
 
