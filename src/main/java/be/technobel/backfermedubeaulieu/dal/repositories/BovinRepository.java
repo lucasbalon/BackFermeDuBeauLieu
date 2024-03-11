@@ -14,5 +14,4 @@ public interface BovinRepository<T extends Bull> extends JpaRepository<T, Long> 
     @Query("select t from Bull t where t.loopNumber = :loopNumber")
     Optional<T> findByLoopNumber(String loopNumber);
 
-
 }

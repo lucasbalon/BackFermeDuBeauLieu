@@ -14,5 +14,5 @@ public class Pasture {
     private String name;
     private double size;
     @OneToMany(mappedBy = "pasture")
-    private List<Bull> bovin;
+    private List<Bull> bovins;
 }
