@@ -1,11 +1,9 @@
 package be.technobel.backfermedubeaulieu.dal.models;
 
 import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
@@ -18,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class Bull{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,8 +41,4 @@ public class Bull{
     private List<Injection> injection;
     @OneToOne(mappedBy = "bovin")
     private Sale sale;
-    @OneToMany(mappedBy = "father")
-    private List<Bull> bullChildren;
-    @OneToMany(mappedBy = "mother")
-    private List<Cow> cowChildren;
 }

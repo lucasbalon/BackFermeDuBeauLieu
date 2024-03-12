@@ -17,4 +17,6 @@ public interface BovinRepository<T extends Bull> extends JpaRepository<T, Long> 
     @Query("select t.loopNumber from Bull t")
     String[] findAllBovinsLoopNumber();
 
+    @Query("select t from Bull t where (t.father.id = :id or t.mother.id = :id) ")
+    List<Bull> findChildren(Long id);
 }

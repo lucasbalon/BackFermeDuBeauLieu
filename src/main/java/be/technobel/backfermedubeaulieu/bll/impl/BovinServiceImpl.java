@@ -3,21 +3,27 @@ package be.technobel.backfermedubeaulieu.bll.impl;
 import be.technobel.backfermedubeaulieu.bll.services.BovinService;
 import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.models.Cow;
+import be.technobel.backfermedubeaulieu.dal.models.Injection;
 import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
 import be.technobel.backfermedubeaulieu.dal.repositories.BullRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.CowRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.PastureRepository;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.EntityAlreadyExistsException;
+import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.searchBovin.BovinSearchDTO;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.BovinForm;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto.fromEntityInjectionDTO;
+import static be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto.fromEntityScanDTO;
 
 @Service
 public class BovinServiceImpl implements BovinService {
@@ -79,11 +85,39 @@ public class BovinServiceImpl implements BovinService {
     }
 
     @Override
-    public ArrayList<BovinSearchDTO> findAllBovins() {
-        ArrayList<BovinSearchDTO> all = new ArrayList<>();
-        all.addAll(cowRepository.findAll().stream().map(BovinSearchDTO::fromEntity).toList());
-        all.addAll(bullRepository.findAll().stream().map(BovinSearchDTO::fromEntity).toList());
-        return all;
+    public List<BovinSearchDTO> findAllBovins() {
+        return bullRepository.findAll().stream().map(BovinSearchDTO::fromEntity).toList();
+    }
+
+    @Override
+    public BovinDto findBovinById(Long id) {
+        Bull bull;
+        if (isMale(id)) {
+            bull = bullRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));
+        } else {
+            bull = cowRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));
+        }
+        return new BovinDto(
+                bull.getLoopNumber(),
+                bull.getCoat(),
+                bull.isGender(),
+                bull.getBirthDate(),
+                bull.isCesarean(),
+                bull.getStatus(),
+                (bull.getFather() != null) ? bull.getFather().getLoopNumber() : "Inconnu",
+                (bull.getMother() != null) ? bull.getMother().getLoopNumber() : "Inconnu",
+                (bull.getPasture() != null) ? bull.getPasture().getName() : "Pas en pature",
+                (bull.getSale() != null) ? bull.getSale().getSaleDate() : LocalDate.EPOCH,
+                (bull.getSale() != null) ? bull.getSale().getAmount() : 0,
+                (bull.getSale() != null) ? bull.getSale().getCarrierNumber() : 0,
+                (bull.getSale() != null) ? bull.getSale().getCustomerNumber() : 0,
+                BovinDto.fromEntityBullDTO(bullRepository.findChildren(bull.getId())),
+                bull instanceof Cow ? fromEntityScanDTO(((Cow) bull).getScans()) : null,
+                fromEntityInjectionDTO(bull.getInjection()));
+    }
+
+    private boolean isMale(Long id) {
+        return bullRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé")).isGender();
     }
 
     private Bull findFather(BovinForm bovinForm) {

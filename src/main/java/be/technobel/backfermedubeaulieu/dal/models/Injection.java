@@ -1,10 +1,12 @@
 package be.technobel.backfermedubeaulieu.dal.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Entity
+@Getter
 public class Injection {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

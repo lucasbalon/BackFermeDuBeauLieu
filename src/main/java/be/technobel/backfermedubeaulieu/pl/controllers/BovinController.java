@@ -1,6 +1,7 @@
 package be.technobel.backfermedubeaulieu.pl.controllers;
 
 import be.technobel.backfermedubeaulieu.bll.services.BovinService;
+import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.searchBovin.BovinSearchDTO;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.BovinForm;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,11 @@ public class BovinController {
         return ResponseEntity.ok(bovinService.findAllBovinsLoopNumber());
     }
     @GetMapping
-    public ResponseEntity<ArrayList<BovinSearchDTO>> findAllBovins() {
+    public ResponseEntity<List<BovinSearchDTO>> findAllBovins() {
         return ResponseEntity.ok(bovinService.findAllBovins());
+    }
+    @GetMapping("/id/{id}")
+    public ResponseEntity<BovinDto> findBovinById(@PathVariable Long id) {
+        return ResponseEntity.ok(bovinService.findBovinById(id));
     }
 }
