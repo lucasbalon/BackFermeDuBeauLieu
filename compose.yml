@@ -1,0 +1,46 @@
+version: '3.8'
+networks:
+  ferme:
+
+volumes:
+  data:
+
+services:
+
+  db:
+    container_name: database
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=ferme
+    ports:
+      - '5432:5432'
+    networks:
+      - ferme
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  backend:
+    container_name: ferme
+    build: ../BackFermeDuBeauLieu
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    networks:
+      - ferme
+    environment:
+#      - SPRING_PROFILES_ACTIVE=prod
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=ferme
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DDL=update
+#      - SMTP_HOST=sandbox.smtp.mailtrap.io
+#      - SMTP_PASSWORD=570e8bf1b9ab8a
+#      - SMTP_PORT=465
+#      - SMTP_USERNAME=16f4841f49d2f9
+#      - DATA_INIT=false
+#      - USER_INIT=true
