@@ -1,9 +1,11 @@
 package be.technobel.backfermedubeaulieu.bll.impl;
 
 import be.technobel.backfermedubeaulieu.bll.services.BovinService;
+import be.technobel.backfermedubeaulieu.bll.services.PastureService;
 import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.models.Cow;
 import be.technobel.backfermedubeaulieu.dal.models.Injection;
+import be.technobel.backfermedubeaulieu.dal.models.Pasture;
 import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
 import be.technobel.backfermedubeaulieu.dal.repositories.BullRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.CowRepository;
@@ -12,7 +14,10 @@ import be.technobel.backfermedubeaulieu.pl.config.exceptions.EntityAlreadyExists
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.searchBovin.BovinSearchDTO;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.BovinForm;
+import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.IBovinForm;
+import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.ShortBovinForm;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -42,7 +47,8 @@ public class BovinServiceImpl implements BovinService {
         return bovinSearchDTOs;
     }
 
-    private boolean isUnique(BovinForm bovinForm) {
+    //todo: fonctionne toujours avec l'interface ?
+    private boolean isUnique(IBovinForm bovinForm) {
         ArrayList<Bull> all = (ArrayList<Bull>) bullRepository.findAll();
         all.addAll(cowRepository.findAll());
         return all.stream()
@@ -77,6 +83,35 @@ public class BovinServiceImpl implements BovinService {
             throw new EntityAlreadyExistsException("Bovin avec ce numéro de boucle existe déja");
         }
 
+    }
+
+    @Override
+    public void shortCreateBovin(ShortBovinForm shortBovinForm) {
+        if (isUnique(shortBovinForm)) {
+            if (shortBovinForm.gender()) {
+                bullRepository.save(Bull.builder()
+                        .coat(shortBovinForm.coat())
+                        .loopNumber(shortBovinForm.loopNumber())
+                        .gender(true)
+                        .status(Status.ALIVE)
+                        .birthDate(shortBovinForm.birthDate())
+                        .cesarean(false)
+                        .mother(null)
+                        .father(null).build());
+            } else {
+                cowRepository.save(Cow.builder()
+                        .coat(shortBovinForm.coat())
+                        .loopNumber(shortBovinForm.loopNumber())
+                        .gender(false)
+                        .status(Status.ALIVE)
+                        .birthDate(shortBovinForm.birthDate())
+                        .cesarean(false)
+                        .mother(null)
+                        .father(null).build());
+            }
+        }else {
+            throw new EntityAlreadyExistsException("Bovin avec ce numéro de boucle existe déja");
+        }
     }
 
     @Override
@@ -116,25 +151,46 @@ public class BovinServiceImpl implements BovinService {
                 fromEntityInjectionDTO(bull.getInjection()));
     }
 
+    @Transactional
+    @Override
+    public void updatePasture(Long pastureId, Long bovinId) {
+        if (isMale(bovinId)) {
+            bullRepository.updatePasture(pastureId, bovinId);
+        } else {
+            cowRepository.updatePasture(pastureId, bovinId);
+        }
+    }
+
+    @Override
+    public List<Bull> findAllBullsByPastureName(String name) {
+        return bullRepository.findAllBullsByPastureName(name);
+    }
+
+
     private boolean isMale(Long id) {
         return bullRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé")).isGender();
     }
 
-    private Bull findFather(BovinForm bovinForm) {
+    protected Bull findFFather(Pasture pasture) {
+        return bullRepository.findFather(pasture);
+    }
+
+    protected Bull findFather(BovinForm bovinForm) {
         if (findMother(bovinForm).getPasture() == null) {
             throw new EntityNotFoundException("La vache mère n'a pas de pature attribuée");
         }
-        Bull bull = findMother(bovinForm).getPasture().getBovins()
-                .stream()
-                .filter(bovin -> !(bovin instanceof Cow))
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Pas de Taureau sur la pature"));
+        Bull bull;
+        try {
+            bull = findFFather(findMother(bovinForm).getPasture());
+        }catch (Exception e) {
+            throw new EntityNotFoundException("Pas ou trop de Taureau sur la pature");
+        }
 
         return bullRepository.findByLoopNumber(bull.getLoopNumber())
                 .orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));
     }
 
-    private Cow findMother(BovinForm bovinForm) {
+    protected Cow findMother(BovinForm bovinForm) {
         try {
             return cowRepository.findByLoopNumber(bovinForm.motherLoopNumber())
                     .orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));

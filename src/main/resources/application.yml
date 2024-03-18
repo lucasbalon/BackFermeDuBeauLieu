@@ -14,3 +14,9 @@ Spring:
     properties:
       hibernate:
         format_sql: true
+
+datainit: ${DATAINIT}
+userinit: ${USERINIT}
+
+username: ${USERNAME}
+password: ${PASSWORD}

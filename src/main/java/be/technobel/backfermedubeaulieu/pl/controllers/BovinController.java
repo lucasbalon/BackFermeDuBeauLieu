@@ -4,6 +4,7 @@ import be.technobel.backfermedubeaulieu.bll.services.BovinService;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.searchBovin.BovinSearchDTO;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.BovinForm;
+import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.ShortBovinForm;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,11 @@ public class BovinController {
     @PostMapping
     public ResponseEntity<Void> createBovin(@RequestBody BovinForm bovinForm) {
         bovinService.createBovin(bovinForm);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    @PostMapping("/short")
+    public ResponseEntity<Void> shortCreateBovin(@RequestBody ShortBovinForm shortBovinForm) {
+        bovinService.shortCreateBovin(shortBovinForm);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @GetMapping("/loopNumbers")

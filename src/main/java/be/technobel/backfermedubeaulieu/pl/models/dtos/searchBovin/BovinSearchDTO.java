@@ -6,10 +6,6 @@ import lombok.Builder;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-/**
- * DTO for {@link be.technobel.backfermedubeaulieu.dal.models.Bull}
- */
-//TODO:
 @Builder
 public record BovinSearchDTO(
         Long id,

@@ -33,10 +33,6 @@ public record BovinDto(String loopNumber,
                 .toList();
     }
 
-
-    /**
-     * DTO for {@link be.technobel.backfermedubeaulieu.dal.models.Bull}
-     */
     public record BullDto(String loopNumber,
                           LocalDate birthDate) {
     }
@@ -47,9 +43,6 @@ public record BovinDto(String loopNumber,
     }
 
 
-    /**
-     * DTO for {@link be.technobel.backfermedubeaulieu.dal.models.Scan}
-     */
     public record ScanDto(LocalDate scan_date,
                           boolean result) {
     }
