@@ -15,6 +15,9 @@ public interface BovinService {
     void createBovin(BovinForm bovinForm);
     void shortCreateBovin(ShortBovinForm shortBovinForm);
     String[] findAllBovinsLoopNumber();
+    String[] findAllCowLoopNumber();
+    String[] findAllBullLoopNumber();
+    String findBullByPastureId(long id);
     List<BovinSearchDTO> findAllBovins();
     BovinDto findBovinById(Long id);
     void updatePasture(Long pastureId, Long bovinId);

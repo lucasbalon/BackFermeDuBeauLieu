@@ -40,6 +40,23 @@ public class BovinController {
     public ResponseEntity<String[]> findAllBovinsLoopNumber() {
         return ResponseEntity.ok(bovinService.findAllBovinsLoopNumber());
     }
+    @GetMapping("/loopNumbers/cow")
+    public ResponseEntity<String[]> findAllCowsLoopNumber() {
+        return ResponseEntity.ok(bovinService.findAllCowLoopNumber());
+    }
+    @GetMapping("/loopNumbers/bull")
+    public ResponseEntity<String[]> findAllBullsLoopNumber() {
+        return ResponseEntity.ok(bovinService.findAllBullLoopNumber());
+    }
+    @GetMapping("/bull/pasture/{id}")
+    public ResponseEntity<String> findAllBullsByPastureName(@PathVariable long id) {
+        return ResponseEntity.ok(bovinService.findBullByPastureId(id));
+    }
+    @GetMapping("/pasture/{pastureId}/bovin/{bovinId}")
+    public ResponseEntity<Void> updatePasture(@PathVariable Long pastureId, @PathVariable Long bovinId) {
+        bovinService.updatePasture(pastureId, bovinId);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping
     public ResponseEntity<List<BovinSearchDTO>> findAllBovins() {
         return ResponseEntity.ok(bovinService.findAllBovins());

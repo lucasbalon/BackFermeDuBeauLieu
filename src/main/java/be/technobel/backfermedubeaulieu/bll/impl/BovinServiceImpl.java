@@ -10,6 +10,7 @@ import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
 import be.technobel.backfermedubeaulieu.dal.repositories.BullRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.CowRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.PastureRepository;
+import be.technobel.backfermedubeaulieu.pl.config.exceptions.ConsanguinityException;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.EntityAlreadyExistsException;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.searchBovin.BovinSearchDTO;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -116,7 +118,24 @@ public class BovinServiceImpl implements BovinService {
 
     @Override
     public String[] findAllBovinsLoopNumber() {
+        return Stream.concat(Arrays.stream(findAllBullLoopNumber()), Arrays.stream(findAllCowLoopNumber()))
+                .toArray(String[]::new);
+    }
+
+    @Override
+    public String[] findAllCowLoopNumber() {
+        return cowRepository.findAllBovinsLoopNumber();
+    }
+
+    @Override
+    public String[] findAllBullLoopNumber() {
         return bullRepository.findAllBovinsLoopNumber();
+    }
+
+    @Override
+    public String findBullByPastureId(long id) {
+        String loopNumber = bullRepository.findBullByPastureId(id);
+        return Objects.requireNonNullElse(loopNumber, "Pas de Taureau assigné à cette pature");
     }
 
     @Override
@@ -154,11 +173,20 @@ public class BovinServiceImpl implements BovinService {
     @Transactional
     @Override
     public void updatePasture(Long pastureId, Long bovinId) {
-        if (isMale(bovinId)) {
-            bullRepository.updatePasture(pastureId, bovinId);
+        if (!isConsanguinity(pastureId, bovinId)) {
+            if (isMale(bovinId)) {
+                bullRepository.updatePasture(pastureId, bovinId);
+            } else {
+                cowRepository.updatePasture(pastureId, bovinId);
+            }
         } else {
-            cowRepository.updatePasture(pastureId, bovinId);
+            throw new ConsanguinityException("Alerte consanguinité !");
         }
+    }
+
+    //todo
+    private boolean isConsanguinity(long pastureId, long bovinId) {
+        return true;
     }
 
     @Override
