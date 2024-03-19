@@ -3,12 +3,16 @@ package be.technobel.backfermedubeaulieu.bll.services;
 
 import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
+import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinShortDTO;
+import be.technobel.backfermedubeaulieu.pl.models.dtos.PastureFullDTO;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.searchBovin.BovinSearchDTO;
+import be.technobel.backfermedubeaulieu.pl.models.forms.PastureForm;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.BovinForm;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.ShortBovinForm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface BovinService {
     List<BovinSearchDTO> findBovinsByLoopNumber(String loopNumber);
@@ -17,9 +21,14 @@ public interface BovinService {
     String[] findAllBovinsLoopNumber();
     String[] findAllCowLoopNumber();
     String[] findAllBullLoopNumber();
-    String findBullByPastureId(long id);
+    String findBullLoopnumberByPastureId(long id);
     List<BovinSearchDTO> findAllBovins();
     BovinDto findBovinById(Long id);
-    void updatePasture(Long pastureId, Long bovinId);
+    void updatePasture(Long pastureId, String cowLoopnumber);
+    void updatePastureBull(Long pastureId, String bullLoopnumber);
+    PastureFullDTO findPasture(long id);
+    List<BovinShortDTO> findAvailableBull();
+    void removeCowFromPasture(long id);
+
     List<Bull> findAllBullsByPastureName(String name);
 }

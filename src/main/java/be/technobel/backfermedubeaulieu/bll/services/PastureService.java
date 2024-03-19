@@ -13,4 +13,5 @@ public interface PastureService {
     void savePasture(PastureForm pastureForm);
 
     Pasture findByName(String name);
+    Pasture findById(long id);
 }

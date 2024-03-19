@@ -5,6 +5,7 @@ import be.technobel.backfermedubeaulieu.dal.models.Pasture;
 import be.technobel.backfermedubeaulieu.dal.repositories.PastureRepository;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.PastureDto;
 import be.technobel.backfermedubeaulieu.pl.models.forms.PastureForm;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,5 +34,10 @@ public class PastureServiceImpl implements PastureService {
     @Override
     public Pasture findByName(String name) {
         return pastureRepository.findByName(name);
+    }
+
+    @Override
+    public Pasture findById(long id) {
+        return pastureRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pature pas trouvée"));
     }
 }

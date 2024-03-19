@@ -25,14 +25,16 @@ public class DataInit {
     CommandLineRunner initDatabase(BovinService bovinService, PastureService pastureService){
         return args -> {
             Faker faker = new Faker(Locale.FRENCH);
+            String loopNumber1 = faker.number().digits(6);
+            String loopNumber2 = faker.number().digits(6);
                 ShortBovinForm bovinFormMale = new ShortBovinForm(
-                        faker.number().digits(6),
+                        loopNumber1,
                         faker.color().name(),
                         true,
                         faker.date().birthdayLocalDate()
                 );
             ShortBovinForm bovinFormFemale = new ShortBovinForm(
-                    faker.number().digits(6),
+                    loopNumber2,
                     faker.color().name(),
                     false,
                     faker.date().birthdayLocalDate()
@@ -44,8 +46,8 @@ public class DataInit {
                     faker.number().numberBetween(15,450)
             );
             pastureService.savePasture(pastureForm);
-            bovinService.updatePasture(1L, 1L);
-            bovinService.updatePasture(1L, 2L);
+            bovinService.updatePasture(1L, loopNumber1);
+            bovinService.updatePasture(1L, loopNumber2);
 
             for (int i = 0; i < 15; i++) {
                 BovinForm bovinFormChild = new BovinForm(

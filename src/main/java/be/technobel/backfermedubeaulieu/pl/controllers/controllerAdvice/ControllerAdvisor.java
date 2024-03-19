@@ -1,5 +1,6 @@
 package be.technobel.backfermedubeaulieu.pl.controllers.controllerAdvice;
 
+import be.technobel.backfermedubeaulieu.pl.config.exceptions.ConsanguinityException;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.DuplicateUserException;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.EntityAlreadyExistsException;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.ErrorDTO;
@@ -60,6 +61,11 @@ public class ControllerAdvisor {
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ErrorDTO> handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
         return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(ConsanguinityException.class)
+    public ResponseEntity<ErrorDTO> handleConsanguinityException(ConsanguinityException e) {
+        return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.NOT_MODIFIED);
     }
 
 }

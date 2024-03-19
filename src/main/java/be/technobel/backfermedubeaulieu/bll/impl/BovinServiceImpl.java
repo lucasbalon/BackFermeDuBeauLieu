@@ -13,6 +13,8 @@ import be.technobel.backfermedubeaulieu.dal.repositories.PastureRepository;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.ConsanguinityException;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.EntityAlreadyExistsException;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
+import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinShortDTO;
+import be.technobel.backfermedubeaulieu.pl.models.dtos.PastureFullDTO;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.searchBovin.BovinSearchDTO;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.BovinForm;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.IBovinForm;
@@ -22,10 +24,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,10 +35,12 @@ import static be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto.fromEntit
 public class BovinServiceImpl implements BovinService {
     private final BullRepository bullRepository;
     private final CowRepository cowRepository;
+    private final PastureService pastureService;
 
-    public BovinServiceImpl(BullRepository bullRepository, CowRepository cowRepository) {
+    public BovinServiceImpl(BullRepository bullRepository, CowRepository cowRepository, PastureService pastureService) {
         this.bullRepository = bullRepository;
         this.cowRepository = cowRepository;
+        this.pastureService = pastureService;
     }
 
     @Override
@@ -133,8 +134,8 @@ public class BovinServiceImpl implements BovinService {
     }
 
     @Override
-    public String findBullByPastureId(long id) {
-        String loopNumber = bullRepository.findBullByPastureId(id);
+    public String findBullLoopnumberByPastureId(long id) {
+        String loopNumber = bullRepository.findBullLoopNumberByPastureId(id);
         return Objects.requireNonNullElse(loopNumber, "Pas de Taureau assigné à cette pature");
     }
 
@@ -172,21 +173,76 @@ public class BovinServiceImpl implements BovinService {
 
     @Transactional
     @Override
-    public void updatePasture(Long pastureId, Long bovinId) {
-        if (!isConsanguinity(pastureId, bovinId)) {
-            if (isMale(bovinId)) {
-                bullRepository.updatePasture(pastureId, bovinId);
-            } else {
-                cowRepository.updatePasture(pastureId, bovinId);
-            }
+    public void updatePasture(Long pastureId, String cowLoopnumber) {
+        String loopNumber = findBullLoopnumberByPastureId(pastureId);
+        Long bovinId;
+        try {
+            bovinId = cowRepository.findByLoopNumber(cowLoopnumber).orElseThrow(() -> new EntityNotFoundException("Vache n'existe pas")).getId();
+        }catch (Exception e) {
+            bovinId = bullRepository.findByLoopNumber(cowLoopnumber).orElseThrow(() -> new EntityNotFoundException("Vache n'existe pas")).getId();
+        }
+
+        if (loopNumber.equals("Pas de Taureau assigné à cette pature")) {
+            bullRepository.updatePasture(pastureId, cowLoopnumber);
         } else {
-            throw new ConsanguinityException("Alerte consanguinité !");
+            Bull bull = bullRepository.findByLoopNumber(findBullLoopnumberByPastureId(pastureId)).orElseThrow(() -> new EntityNotFoundException("Taureau n'existe pas"));
+            Cow cow = cowRepository.findById(bovinId).orElseThrow(() -> new EntityNotFoundException("Vache n'existe pas"));
+            if (!isConsanguinity(bull, cow.getLoopNumber())) {
+                if (isMale(bovinId)) {
+                    bullRepository.updatePasture(pastureId, cowLoopnumber);
+                } else {
+                    cowRepository.updatePasture(pastureId, cowLoopnumber);
+                }
+            } else {
+                throw new ConsanguinityException("Alerte consanguinité !");
+            }
         }
     }
 
-    //todo
-    private boolean isConsanguinity(long pastureId, long bovinId) {
-        return true;
+    @Transactional
+    @Override
+    public void updatePastureBull(Long pastureId, String bullLoopnumber) {
+        if (!bullRepository.findAllBullsByPastureName(pastureService.findById(pastureId).getName()).isEmpty()) {
+            bullRepository.deleteAllByPasture(pastureId);
+        }
+        bullRepository.updatePasture(pastureId, bullLoopnumber);
+    }
+
+    @Override
+    public PastureFullDTO findPasture(long id) {
+        Bull bull = bullRepository.findBullByPastureId(id).orElse(new Bull());
+        Pasture pasture = pastureService.findById(id);
+        return new PastureFullDTO(
+                pasture.getName(),
+                bull.getLoopNumber(),
+                cowRepository.findAvalaibleCowsByPasture(pasture.getId()).stream().map(BovinShortDTO::fromEntity).toList(),
+                cowRepository.findCowInPasture(pasture.getId()).stream().map(BovinShortDTO::fromEntity).toList()
+        );
+    }
+
+    @Override
+    public List<BovinShortDTO> findAvailableBull() {
+        return bullRepository.findAvailableBull().stream().map(BovinShortDTO::fromEntity).toList();
+    }
+
+    @Override
+    public void removeCowFromPasture(long id) {
+        cowRepository.removeFromPasture(id);
+    }
+
+    private boolean isConsanguinity(Bull bull, String loopNumber) {
+        // Condition de fin de récursivité :
+        // Soit on a trouvé un match
+        // Soit il n'y a pas de parents à contrôler (fin de l'arbre généalogique)
+        if (bull == null) {
+            return false;
+        } else if (bull.getLoopNumber().equals(loopNumber)) {
+            return true;
+        }
+
+        // Recherche récursive dans l'arbre généalogique
+        return isConsanguinity(bull.getFather(), loopNumber) ||
+                isConsanguinity(bull.getMother(), loopNumber);
     }
 
     @Override

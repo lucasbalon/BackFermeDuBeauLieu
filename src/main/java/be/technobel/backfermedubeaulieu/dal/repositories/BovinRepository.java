@@ -23,8 +23,8 @@ public interface BovinRepository<T extends Bull> extends JpaRepository<T, Long> 
     List<Bull> findChildren(Long id);
 
     @Modifying
-    @Query("update Bull b set b.pasture.id = :pastureId where b.id = :bovinId")
-    void updatePasture(Long pastureId, Long bovinId);
+    @Query("update Bull b set b.pasture.id = :pastureId where b.loopNumber = :bullLoopnumber")
+    void updatePasture(Long pastureId, String bullLoopnumber);
 
     @Query("select t from Bull t where t.pasture.name = :name")
     List<Bull> findAllBullsByPastureName(String name);
@@ -32,5 +32,6 @@ public interface BovinRepository<T extends Bull> extends JpaRepository<T, Long> 
     //todo: rednre bull optional
     @Query("select t from Bull t where t.pasture = :pasture and t.gender = true")
     Bull findFather(Pasture pasture);
+
 
 }
