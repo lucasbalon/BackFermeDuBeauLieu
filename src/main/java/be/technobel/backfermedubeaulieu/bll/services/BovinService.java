@@ -28,7 +28,7 @@ public interface BovinService {
     void updatePastureBull(Long pastureId, String bullLoopnumber);
     PastureFullDTO findPasture(long id);
     List<BovinShortDTO> findAvailableBull();
-    void removeCowFromPasture(long id);
+    void removeCowFromPasture(String loopNumber);
 
     List<Bull> findAllBullsByPastureName(String name);
 }

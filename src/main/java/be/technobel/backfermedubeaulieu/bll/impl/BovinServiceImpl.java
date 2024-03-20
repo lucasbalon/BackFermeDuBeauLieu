@@ -187,7 +187,7 @@ public class BovinServiceImpl implements BovinService {
         } else {
             Bull bull = bullRepository.findByLoopNumber(findBullLoopnumberByPastureId(pastureId)).orElseThrow(() -> new EntityNotFoundException("Taureau n'existe pas"));
             Cow cow = cowRepository.findById(bovinId).orElseThrow(() -> new EntityNotFoundException("Vache n'existe pas"));
-            if (!isConsanguinity(bull, cow.getLoopNumber())) {
+            if (!isConsanguinity(bull, cowLoopnumber)) {
                 if (isMale(bovinId)) {
                     bullRepository.updatePasture(pastureId, cowLoopnumber);
                 } else {
@@ -202,6 +202,14 @@ public class BovinServiceImpl implements BovinService {
     @Transactional
     @Override
     public void updatePastureBull(Long pastureId, String bullLoopnumber) {
+        PastureFullDTO pastureFullDTO = findPasture(pastureId);
+        Bull bull = bullRepository.findByLoopNumber(bullLoopnumber).orElseThrow(() -> new EntityNotFoundException("Taureau introuvable, vérifier le numéro"));
+        List<String> pastureCows = pastureFullDTO.pastureCows().stream().map(BovinShortDTO::loopNumber).toList();
+        for (String cowLoopnumber : pastureCows) {
+            if (isConsanguinity(bull, cowLoopnumber)) {
+                throw new ConsanguinityException("Alerte consanguinité !");
+            }
+        }
         if (!bullRepository.findAllBullsByPastureName(pastureService.findById(pastureId).getName()).isEmpty()) {
             bullRepository.deleteAllByPasture(pastureId);
         }
@@ -225,9 +233,10 @@ public class BovinServiceImpl implements BovinService {
         return bullRepository.findAvailableBull().stream().map(BovinShortDTO::fromEntity).toList();
     }
 
+    @Transactional
     @Override
-    public void removeCowFromPasture(long id) {
-        cowRepository.removeFromPasture(id);
+    public void removeCowFromPasture(String loopNumber) {
+        cowRepository.removeFromPasture(loopNumber);
     }
 
     private boolean isConsanguinity(Bull bull, String loopNumber) {
@@ -236,10 +245,18 @@ public class BovinServiceImpl implements BovinService {
         // Soit il n'y a pas de parents à contrôler (fin de l'arbre généalogique)
         if (bull == null) {
             return false;
-        } else if (bull.getLoopNumber().equals(loopNumber)) {
-            return true;
-        }
 
+        }
+        if (cowRepository.findByLoopNumber(loopNumber).get().getFather() != null) {
+            if (bull.getLoopNumber().equals(cowRepository.findByLoopNumber(loopNumber).get().getFather().getLoopNumber())) {
+                return true;
+            }
+        }
+        if (cowRepository.findByLoopNumber(loopNumber).get().getMother() != null) {
+            if (bull.getLoopNumber().equals(cowRepository.findByLoopNumber(loopNumber).get().getMother().getLoopNumber())) {
+                return true;
+            }
+        }
         // Recherche récursive dans l'arbre généalogique
         return isConsanguinity(bull.getFather(), loopNumber) ||
                 isConsanguinity(bull.getMother(), loopNumber);

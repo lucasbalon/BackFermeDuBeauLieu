@@ -86,6 +86,11 @@ public class BovinController {
         bovinService.updatePasture(pastureId, cowLoopnumber);
         return ResponseEntity.ok().build();
     }
+    @DeleteMapping("/cow/{loopNumber}")
+    public ResponseEntity<Void> removeCowFromPasture(@PathVariable String loopNumber) {
+        bovinService.removeCowFromPasture(loopNumber);
+        return ResponseEntity.ok().build();
+    }
 
 
 }

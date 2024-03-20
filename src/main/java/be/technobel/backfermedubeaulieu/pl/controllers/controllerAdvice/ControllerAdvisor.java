@@ -65,7 +65,7 @@ public class ControllerAdvisor {
 
     @ExceptionHandler(ConsanguinityException.class)
     public ResponseEntity<ErrorDTO> handleConsanguinityException(ConsanguinityException e) {
-        return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.NOT_ACCEPTABLE);
     }
 
 }

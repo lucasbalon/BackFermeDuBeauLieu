@@ -20,6 +20,6 @@ public interface CowRepository extends BovinRepository<Cow> {
     @Query("select t from Bull t where (t.gender = false) and t.pasture.id = :id")
     List<Cow> findCowInPasture(long id);
     @Modifying
-    @Query("update Bull t set t.pasture = null where (t.gender = false) and t.id = :id")
-    void removeFromPasture(long id);
+    @Query("update Bull t set t.pasture = null where (t.gender = false) and t.loopNumber = :loopNumber")
+    void removeFromPasture(String loopNumber);
 }
