@@ -11,4 +11,12 @@ public class Substance {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+
+    public Substance(String name) {
+        this.name = name;
+    }
+
+    public Substance() {
+
+    }
 }
