@@ -7,6 +7,7 @@ import be.technobel.backfermedubeaulieu.dal.models.Cow;
 import be.technobel.backfermedubeaulieu.dal.models.Injection;
 import be.technobel.backfermedubeaulieu.dal.models.Pasture;
 import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
+import be.technobel.backfermedubeaulieu.dal.repositories.BovinRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.BullRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.CowRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.PastureRepository;
@@ -237,6 +238,15 @@ public class BovinServiceImpl implements BovinService {
     @Override
     public void removeCowFromPasture(String loopNumber) {
         cowRepository.removeFromPasture(loopNumber);
+    }
+
+    @Override
+    public Bull findByLoopNumber(String loopNumber) {
+        if (isMale(bullRepository.findByLoopNumber(loopNumber).orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé")).getId())) {
+            return bullRepository.findByLoopNumber(loopNumber).orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));
+        } else {
+            return cowRepository.findByLoopNumber(loopNumber).orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));
+        }
     }
 
     private boolean isConsanguinity(Bull bull, String loopNumber) {

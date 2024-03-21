@@ -1,9 +1,11 @@
 package be.technobel.backfermedubeaulieu.dal.models;
 
+import be.technobel.backfermedubeaulieu.pl.models.dtos.SubstanceDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -17,4 +19,15 @@ public class Injection {
     private Bull bovin;
     @ManyToOne
     private Substance substance;
+
+
+    public Injection() {
+        
+    }
+
+    public Injection(SubstanceDto substanceByName, LocalDate localDate, Bull byLoopNumber) {
+        this.substance = new Substance(substanceByName.name());
+        this.injectionDate = localDate;
+        this.bovin = byLoopNumber;
+    }
 }
