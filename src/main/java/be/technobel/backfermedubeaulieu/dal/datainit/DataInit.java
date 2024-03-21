@@ -25,8 +25,8 @@ public class DataInit {
     CommandLineRunner initDatabase(BovinService bovinService, PastureService pastureService){
         return args -> {
             Faker faker = new Faker(Locale.FRENCH);
-            String loopNumber1 = faker.number().digits(6);
-            String loopNumber2 = faker.number().digits(6);
+            String loopNumber1 = faker.number().digits(4);
+            String loopNumber2 = faker.number().digits(4);
                 ShortBovinForm bovinFormMale = new ShortBovinForm(
                         loopNumber1,
                         faker.color().name(),
