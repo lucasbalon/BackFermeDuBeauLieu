@@ -22,6 +22,7 @@ public class InjectionServiceImpl implements InjectionService {
         this.bovinService = bovinService;
     }
 
+    //todo: 2024-03-21T16:08:39.327+01:00 ERROR 10978 --- [nio-8080-exec-7] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : be.technobel.backfermedubeaulieu.dal.models.Injection.substance -> be.technobel.backfermedubeaulieu.dal.models.Substance] with root cause
     @Override
     public void save(InjectionForm injection) throws Throwable {
         injectionRepository.save(

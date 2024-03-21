@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/injectionn")
+@RequestMapping("/injection")
 public class InjectionController {
     private final InjectionService injectionService;
 
     public InjectionController(InjectionService injectionService) {
         this.injectionService = injectionService;
     }
-    @PostMapping("/")
+    @PostMapping()
     public void saveInjection(@RequestBody InjectionForm injection) throws Throwable {
         injectionService.save(injection);
     }
