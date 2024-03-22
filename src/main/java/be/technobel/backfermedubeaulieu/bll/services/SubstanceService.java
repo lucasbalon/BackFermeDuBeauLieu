@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface SubstanceService {
     List<SubstanceDto> getAllSubstances();
     void saveSubstance(SubstanceForm substance);
-    SubstanceDto getSubstanceByName(String name);
+    Substance getSubstanceByName(String name);
 }

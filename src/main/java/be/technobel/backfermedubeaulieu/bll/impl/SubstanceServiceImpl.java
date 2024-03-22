@@ -33,7 +33,8 @@ public class SubstanceServiceImpl implements SubstanceService {
     }
 
     @Override
-    public SubstanceDto getSubstanceByName(String name) {
-        return SubstanceDto.fromEntity(substanceRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Produit introuvable")));
+    public Substance getSubstanceByName(String name) {
+        // Fetch the Substance from the database
+        return substanceRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Ce produit n'existe pas"));
     }
 }
