@@ -29,7 +29,6 @@ public interface BovinRepository<T extends Bull> extends JpaRepository<T, Long> 
     @Query("select t from Bull t where t.pasture.name = :name")
     List<Bull> findAllBullsByPastureName(String name);
 
-    //todo: rednre bull optional
     @Query("select t from Bull t where t.pasture = :pasture and t.gender = true")
     Bull findFather(Pasture pasture);
 

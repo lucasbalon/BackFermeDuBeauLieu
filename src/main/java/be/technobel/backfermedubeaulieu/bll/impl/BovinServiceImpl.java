@@ -4,13 +4,10 @@ import be.technobel.backfermedubeaulieu.bll.services.BovinService;
 import be.technobel.backfermedubeaulieu.bll.services.PastureService;
 import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.models.Cow;
-import be.technobel.backfermedubeaulieu.dal.models.Injection;
 import be.technobel.backfermedubeaulieu.dal.models.Pasture;
 import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
-import be.technobel.backfermedubeaulieu.dal.repositories.BovinRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.BullRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.CowRepository;
-import be.technobel.backfermedubeaulieu.dal.repositories.PastureRepository;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.ConsanguinityException;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.EntityAlreadyExistsException;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
@@ -26,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto.fromEntityInjectionDTO;
@@ -51,7 +47,6 @@ public class BovinServiceImpl implements BovinService {
         return bovinSearchDTOs;
     }
 
-    //todo: fonctionne toujours avec l'interface ?
     private boolean isUnique(IBovinForm bovinForm) {
         ArrayList<Bull> all = (ArrayList<Bull>) bullRepository.findAll();
         all.addAll(cowRepository.findAll());
@@ -188,7 +183,7 @@ public class BovinServiceImpl implements BovinService {
         } else {
             Bull bull = bullRepository.findByLoopNumber(findBullLoopnumberByPastureId(pastureId)).orElseThrow(() -> new EntityNotFoundException("Taureau n'existe pas"));
             Cow cow = cowRepository.findById(bovinId).orElseThrow(() -> new EntityNotFoundException("Vache n'existe pas"));
-            if (!isConsanguinity(bull, cowLoopnumber)) {
+            if (!isRelated(bull, cowLoopnumber)) {
                 if (isMale(bovinId)) {
                     bullRepository.updatePasture(pastureId, cowLoopnumber);
                 } else {
@@ -207,7 +202,7 @@ public class BovinServiceImpl implements BovinService {
         Bull bull = bullRepository.findByLoopNumber(bullLoopnumber).orElseThrow(() -> new EntityNotFoundException("Taureau introuvable, vérifier le numéro"));
         List<String> pastureCows = pastureFullDTO.pastureCows().stream().map(BovinShortDTO::loopNumber).toList();
         for (String cowLoopnumber : pastureCows) {
-            if (isConsanguinity(bull, cowLoopnumber)) {
+            if (isRelated(bull, cowLoopnumber)) {
                 throw new ConsanguinityException("Alerte consanguinité !");
             }
         }
@@ -249,27 +244,22 @@ public class BovinServiceImpl implements BovinService {
         }
     }
 
-    private boolean isConsanguinity(Bull bull, String loopNumber) {
-        // Condition de fin de récursivité :
-        // Soit on a trouvé un match
-        // Soit il n'y a pas de parents à contrôler (fin de l'arbre généalogique)
+    private boolean isRelated(Bull bull, String loopNumber) {
+
         if (bull == null) {
             return false;
+        }
 
-        }
-        if (cowRepository.findByLoopNumber(loopNumber).get().getFather() != null) {
-            if (bull.getLoopNumber().equals(cowRepository.findByLoopNumber(loopNumber).get().getFather().getLoopNumber())) {
-                return true;
-            }
-        }
-        if (cowRepository.findByLoopNumber(loopNumber).get().getMother() != null) {
-            if (bull.getLoopNumber().equals(cowRepository.findByLoopNumber(loopNumber).get().getMother().getLoopNumber())) {
-                return true;
-            }
-        }
-        // Recherche récursive dans l'arbre généalogique
-        return isConsanguinity(bull.getFather(), loopNumber) ||
-                isConsanguinity(bull.getMother(), loopNumber);
+        Bull queriedBull = cowRepository.findByLoopNumber(loopNumber).get();
+        boolean isFather = isParent(bull, queriedBull.getFather());
+        boolean isMother = isParent(bull, queriedBull.getMother());
+
+
+        return isFather || isMother || isRelated(bull.getFather(), loopNumber) || isRelated(bull.getMother(), loopNumber);
+    }
+
+    private boolean isParent(Bull bull, Bull parent) {
+        return parent != null && bull.getLoopNumber().equals(parent.getLoopNumber());
     }
 
     @Override

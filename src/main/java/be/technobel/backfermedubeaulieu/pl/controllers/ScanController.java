@@ -2,11 +2,9 @@ package be.technobel.backfermedubeaulieu.pl.controllers;
 
 import be.technobel.backfermedubeaulieu.bll.services.ScanService;
 import be.technobel.backfermedubeaulieu.pl.models.forms.ScanForm;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/scan")
 public class ScanController {

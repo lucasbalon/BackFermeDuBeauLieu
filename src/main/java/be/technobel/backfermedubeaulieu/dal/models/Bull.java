@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 import java.util.List;
 //todo: orm relation hibernate
+//todo: diminuer les annotations
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorValue("BULL")

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * The UserController class defines HTTP endpoints related to user management and authentication.
  */
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 public class UserController {
