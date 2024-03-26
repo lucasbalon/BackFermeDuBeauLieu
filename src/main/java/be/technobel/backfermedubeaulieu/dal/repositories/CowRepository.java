@@ -1,8 +1,6 @@
 package be.technobel.backfermedubeaulieu.dal.repositories;
 
-import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.models.Cow;
-import be.technobel.backfermedubeaulieu.dal.models.Pasture;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,7 +11,7 @@ public interface CowRepository extends BovinRepository<Cow> {
     String[] findAllBovinsLoopNumber();
 
 
-    @Query("select t from Bull t where (t.gender = false) and ((t.pasture.id != :id) or (t.pasture.id is null))")
+    @Query("select t from Bull t where (t.gender = false) and (t.pasture.id is null)")
     List<Cow> findAvalaibleCowsByPasture(long id);
     @Query("select t from Bull t where (t.gender = false) and (t.pasture.id is null)")
     List<Cow> findAvalaibleCows();
