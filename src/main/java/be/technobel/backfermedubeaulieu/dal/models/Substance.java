@@ -2,10 +2,12 @@ package be.technobel.backfermedubeaulieu.dal.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
 @Getter
+@Setter
 public class Substance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

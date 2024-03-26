@@ -50,8 +50,8 @@ public class BovinServiceImpl implements BovinService {
         return bovinSearchDTOs;
     }
 
-    private boolean isUnique(IBovinForm bovinForm) {
-        ArrayList<Bull> all = (ArrayList<Bull>) bullRepository.findAll();
+    protected boolean isUnique(IBovinForm bovinForm) {
+        List<Bull> all = bullRepository.findAll();
         all.addAll(cowRepository.findAll());
         return all.stream()
                 .noneMatch(bull -> bull.getLoopNumber().equals(bovinForm.loopNumber()));
@@ -198,6 +198,7 @@ public class BovinServiceImpl implements BovinService {
         }
     }
 
+    //todo: s'arrete ici
     @Transactional
     @Override
     public void updatePastureBull(Long pastureId, String bullLoopnumber) {

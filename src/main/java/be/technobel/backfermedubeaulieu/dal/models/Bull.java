@@ -42,4 +42,5 @@ public class Bull{
     private List<Injection> injection;
     @OneToOne(mappedBy = "bovin")
     private Sale sale;
+
 }
