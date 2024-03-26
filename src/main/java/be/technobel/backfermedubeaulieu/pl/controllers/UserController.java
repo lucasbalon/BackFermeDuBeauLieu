@@ -9,10 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * The UserController class defines HTTP endpoints related to user management and authentication.
- */
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 public class UserController {

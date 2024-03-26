@@ -2,6 +2,7 @@ package be.technobel.backfermedubeaulieu.dal.repositories;
 
 import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.models.Pasture;
+import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,6 +32,9 @@ public interface BovinRepository<T extends Bull> extends JpaRepository<T, Long> 
 
     @Query("select t from Bull t where t.pasture = :pasture and t.gender = true")
     Bull findFather(Pasture pasture);
+
+    @Query("select t from Bull t where t.status = :status")
+    List<Bull> findAllByStatus(Status status);
 
 
 }

@@ -11,9 +11,11 @@ public class Substance {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private boolean active;
 
     public Substance(String name) {
         this.name = name;
+        this.active = true;
     }
 
     public Substance() {

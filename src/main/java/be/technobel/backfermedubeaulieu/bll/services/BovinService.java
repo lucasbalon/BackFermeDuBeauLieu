@@ -2,6 +2,7 @@ package be.technobel.backfermedubeaulieu.bll.services;
 
 
 import be.technobel.backfermedubeaulieu.dal.models.Bull;
+import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinShortDTO;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.PastureFullDTO;
@@ -30,6 +31,8 @@ public interface BovinService {
     List<BovinShortDTO> findAvailableBull();
     void removeCowFromPasture(String loopNumber);
     Bull findByLoopNumber(String loopNumber);
+    void setStatus(Status status, String loopNumber);
+    List<Bull> findAllByStatus(Status status);
 
     List<Bull> findAllBullsByPastureName(String name);
 }

@@ -9,7 +9,6 @@ Spring:
   jpa:
     hibernate:
       ddl-auto: ${DDL}
-    show-sql: true
     database: postgresql
     properties:
       hibernate:

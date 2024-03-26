@@ -1,5 +1,6 @@
 package be.technobel.backfermedubeaulieu.pl.controllers.controllerAdvice;
 
+import be.technobel.backfermedubeaulieu.pl.config.exceptions.AlreadyDeadException;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.ConsanguinityException;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.DuplicateUserException;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.EntityAlreadyExistsException;
@@ -67,5 +68,10 @@ public class ControllerAdvisor {
     public ResponseEntity<ErrorDTO> handleConsanguinityException(ConsanguinityException e) {
         return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.NOT_ACCEPTABLE);
     }
+    @ExceptionHandler(AlreadyDeadException.class)
+    public ResponseEntity<ErrorDTO> handleAlreadyDeadException(AlreadyDeadException e) {
+        return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.NOT_ACCEPTABLE);
+    }
+
 
 }

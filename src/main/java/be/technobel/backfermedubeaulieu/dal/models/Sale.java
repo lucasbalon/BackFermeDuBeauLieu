@@ -17,4 +17,16 @@ public class Sale {
     private int customerNumber;
     @OneToOne
     private Bull bovin;
+
+    public Sale(LocalDate localDate, double amount, int carrierNumber, int customerNumber, Bull bull) {
+        this.saleDate = localDate;
+        this.amount = amount;
+        this.carrierNumber = carrierNumber;
+        this.customerNumber = customerNumber;
+        this.bovin = bull;
+    }
+
+    public Sale() {
+
+    }
 }

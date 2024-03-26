@@ -4,7 +4,6 @@ import be.technobel.backfermedubeaulieu.bll.services.InjectionService;
 import be.technobel.backfermedubeaulieu.pl.models.forms.InjectionForm;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/injection")
 public class InjectionController {

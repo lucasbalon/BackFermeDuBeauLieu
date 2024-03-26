@@ -6,6 +6,7 @@ import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.models.Cow;
 import be.technobel.backfermedubeaulieu.dal.models.Pasture;
 import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
+import be.technobel.backfermedubeaulieu.dal.repositories.BovinRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.BullRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.CowRepository;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.ConsanguinityException;
@@ -33,11 +34,13 @@ public class BovinServiceImpl implements BovinService {
     private final BullRepository bullRepository;
     private final CowRepository cowRepository;
     private final PastureService pastureService;
+    private final BovinRepository bovinRepository;
 
-    public BovinServiceImpl(BullRepository bullRepository, CowRepository cowRepository, PastureService pastureService) {
+    public BovinServiceImpl(BullRepository bullRepository, CowRepository cowRepository, PastureService pastureService, BovinRepository bovinRepository) {
         this.bullRepository = bullRepository;
         this.cowRepository = cowRepository;
         this.pastureService = pastureService;
+        this.bovinRepository = bovinRepository;
     }
 
     @Override
@@ -244,13 +247,25 @@ public class BovinServiceImpl implements BovinService {
         }
     }
 
+    @Override
+    public void setStatus(Status status, String loopNumber) {
+        Bull bull = findByLoopNumber(loopNumber);
+        bull.setStatus(status);
+        bullRepository.save(bull);
+    }
+
+    @Override
+    public List<Bull> findAllByStatus(Status status) {
+        return bovinRepository.findAllByStatus(status);
+    }
+
     private boolean isRelated(Bull bull, String loopNumber) {
 
         if (bull == null) {
             return false;
         }
 
-        Bull queriedBull = cowRepository.findByLoopNumber(loopNumber).get();
+        Bull queriedBull = cowRepository.findByLoopNumber(loopNumber).orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));
         boolean isFather = isParent(bull, queriedBull.getFather());
         boolean isMother = isParent(bull, queriedBull.getMother());
 

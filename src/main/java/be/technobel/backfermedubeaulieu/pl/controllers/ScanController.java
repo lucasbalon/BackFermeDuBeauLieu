@@ -4,7 +4,6 @@ import be.technobel.backfermedubeaulieu.bll.services.ScanService;
 import be.technobel.backfermedubeaulieu.pl.models.forms.ScanForm;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/scan")
 public class ScanController {

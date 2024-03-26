@@ -1,6 +1,7 @@
 package be.technobel.backfermedubeaulieu.pl.controllers;
 
 import be.technobel.backfermedubeaulieu.bll.services.BovinService;
+import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinShortDTO;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.PastureFullDTO;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/bovin")
 public class BovinController {
@@ -66,6 +66,10 @@ public class BovinController {
     @GetMapping("/bull/available")
     public ResponseEntity<List<BovinShortDTO>> findAvailableBull() {
         return ResponseEntity.ok(bovinService.findAvailableBull());
+    }
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<BovinSearchDTO>> findAllBullsByStatus(@PathVariable Status status) {
+        return ResponseEntity.ok(bovinService.findAllByStatus(status).stream().map(BovinSearchDTO::fromEntity).toList());
     }
 
 

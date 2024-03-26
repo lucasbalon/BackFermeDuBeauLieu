@@ -1,6 +1,4 @@
 version: '3.8'
-networks:
-  ferme:
 
 volumes:
   data:
@@ -42,7 +40,11 @@ services:
 #      - SMTP_PASSWORD=570e8bf1b9ab8a
 #      - SMTP_PORT=465
 #      - SMTP_USERNAME=16f4841f49d2f9
-      - DATAINIT=true
+      - DATAINIT=false
       - USERINIT=true
       - USERNAME=a
       - PASSWORD=a
+
+networks:
+  ferme:
+    external: true
