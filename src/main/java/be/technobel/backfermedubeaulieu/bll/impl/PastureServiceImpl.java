@@ -18,6 +18,7 @@ public class PastureServiceImpl implements PastureService {
     public PastureServiceImpl(PastureRepository pastureRepository) {
         this.pastureRepository = pastureRepository;
     }
+
     @Override
     public List<PastureDto> getAllPastures() {
         return pastureRepository.findAll().stream().map(PastureDto::fromEntity).toList();

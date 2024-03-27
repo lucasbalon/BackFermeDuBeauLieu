@@ -1,6 +1,8 @@
 package be.technobel.backfermedubeaulieu.pl.models.dtos;
 
-import be.technobel.backfermedubeaulieu.dal.models.*;
+import be.technobel.backfermedubeaulieu.dal.models.Bull;
+import be.technobel.backfermedubeaulieu.dal.models.Injection;
+import be.technobel.backfermedubeaulieu.dal.models.Scan;
 import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
 
 import java.time.LocalDate;
@@ -24,31 +26,33 @@ public record BovinDto(String loopNumber,
                        List<InjectionDTO> injections) {
 
 
-    public record InjectionDTO(LocalDate injectionDate,
-                               String substance) {
-    }
     public static List<InjectionDTO> fromEntityInjectionDTO(List<Injection> injections) {
         return injections.stream()
                 .map(injection -> new InjectionDTO(injection.getInjectionDate(), injection.getSubstance().getName()))
                 .toList();
     }
 
-    public record BullDto(String loopNumber,
-                          LocalDate birthDate) {
-    }
     public static List<BullDto> fromEntityBullDTO(List<Bull> children) {
         return children.stream()
                 .map(bull -> new BullDto(bull.getLoopNumber(), bull.getBirthDate()))
                 .toList();
     }
 
-
-    public record ScanDto(LocalDate scan_date,
-                          boolean result) {
-    }
     public static List<ScanDto> fromEntityScanDTO(List<Scan> scans) {
         return scans.stream()
                 .map(scan -> new ScanDto(scan.getScan_date(), scan.isResult()))
                 .toList();
+    }
+
+    public record InjectionDTO(LocalDate injectionDate,
+                               String substance) {
+    }
+
+    public record BullDto(String loopNumber,
+                          LocalDate birthDate) {
+    }
+
+    public record ScanDto(LocalDate scan_date,
+                          boolean result) {
     }
 }

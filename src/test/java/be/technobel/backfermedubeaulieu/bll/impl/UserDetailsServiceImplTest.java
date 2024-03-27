@@ -11,19 +11,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserDetailsServiceImplTest {
 
+    private final String nonExistingUserLogin = "nonExistingUser";
     @Mock
     UserRepository userRepository;
-
     @InjectMocks
     UserDetailsServiceImpl userDetailsService;
-
-    private final String nonExistingUserLogin = "nonExistingUser";
 
     @Test
     void loadUserByUsername_existingUser() {

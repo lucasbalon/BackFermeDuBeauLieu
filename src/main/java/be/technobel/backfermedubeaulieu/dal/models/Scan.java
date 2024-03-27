@@ -8,14 +8,16 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Scan {
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Getter
     private LocalDate scan_date;
+    @Getter
     private boolean result;
     @ManyToOne
     private Cow cow;
@@ -25,4 +27,5 @@ public class Scan {
         this.result = result;
         this.cow = cow;
     }
+
 }

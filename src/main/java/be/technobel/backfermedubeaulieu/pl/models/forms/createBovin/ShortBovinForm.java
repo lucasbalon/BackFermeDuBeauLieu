@@ -14,7 +14,7 @@ public record ShortBovinForm(
         String coat,
         boolean gender,
         @Past
-        LocalDate birthDate) implements IBovinForm{
+        LocalDate birthDate) implements IBovinForm {
 
 
 }

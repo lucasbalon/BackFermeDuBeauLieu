@@ -13,10 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -35,8 +35,8 @@ class UserServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        registerForm = new RegisterForm("test","Test1234=");
-        loginForm = new LoginForm("test","Test1234=");
+        registerForm = new RegisterForm("test", "Test1234=");
+        loginForm = new LoginForm("test", "Test1234=");
     }
 
     @Test

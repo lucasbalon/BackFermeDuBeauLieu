@@ -29,17 +29,17 @@ services:
     networks:
       - ferme
     environment:
-#      - SPRING_PROFILES_ACTIVE=prod
+      #      - SPRING_PROFILES_ACTIVE=prod
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
       - POSTGRES_DB=ferme
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=postgres
       - DDL=update
-#      - SMTP_HOST=sandbox.smtp.mailtrap.io
-#      - SMTP_PASSWORD=570e8bf1b9ab8a
-#      - SMTP_PORT=465
-#      - SMTP_USERNAME=16f4841f49d2f9
+      #      - SMTP_HOST=sandbox.smtp.mailtrap.io
+      #      - SMTP_PASSWORD=570e8bf1b9ab8a
+      #      - SMTP_PORT=465
+      #      - SMTP_USERNAME=16f4841f49d2f9
       - DATAINIT=false
       - USERINIT=true
       - USERNAME=a

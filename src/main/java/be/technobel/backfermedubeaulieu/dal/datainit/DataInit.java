@@ -16,23 +16,22 @@ import java.util.Locale;
 @Configuration
 @ConditionalOnProperty(
         value = "datainit",
-        havingValue = "true",
-        matchIfMissing = false
+        havingValue = "true"
 )
 public class DataInit {
 
     @Bean
-    CommandLineRunner initDatabase(BovinService bovinService, PastureService pastureService){
+    CommandLineRunner initDatabase(BovinService bovinService, PastureService pastureService) {
         return args -> {
             Faker faker = new Faker(Locale.FRENCH);
             String loopNumber1 = faker.number().digits(4);
             String loopNumber2 = faker.number().digits(4);
-                ShortBovinForm bovinFormMale = new ShortBovinForm(
-                        loopNumber1,
-                        faker.color().name(),
-                        true,
-                        faker.date().birthdayLocalDate()
-                );
+            ShortBovinForm bovinFormMale = new ShortBovinForm(
+                    loopNumber1,
+                    faker.color().name(),
+                    true,
+                    faker.date().birthdayLocalDate()
+            );
             ShortBovinForm bovinFormFemale = new ShortBovinForm(
                     loopNumber2,
                     faker.color().name(),
@@ -43,7 +42,7 @@ public class DataInit {
             bovinService.shortCreateBovin(bovinFormFemale);
             PastureForm pastureForm = new PastureForm(
                     faker.funnyName().name(),
-                    faker.number().numberBetween(15,450)
+                    faker.number().numberBetween(15, 450)
             );
             pastureService.savePasture(pastureForm);
             bovinService.updatePasture(1L, loopNumber1);

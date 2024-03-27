@@ -9,8 +9,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashSet;
-
 @Configuration
 @ConditionalOnProperty(
         value = "userinit",
@@ -35,7 +33,7 @@ public class UserInit {
                                 password
                         )
                 );
-            }catch (DuplicateUserException e) {
+            } catch (DuplicateUserException e) {
                 System.out.println("UserInit pas nécessaire");
             }
         };

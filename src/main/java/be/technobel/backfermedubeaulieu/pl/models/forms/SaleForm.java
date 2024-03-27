@@ -1,10 +1,8 @@
 package be.technobel.backfermedubeaulieu.pl.models.forms;
 
-import be.technobel.backfermedubeaulieu.dal.models.Sale;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 /**

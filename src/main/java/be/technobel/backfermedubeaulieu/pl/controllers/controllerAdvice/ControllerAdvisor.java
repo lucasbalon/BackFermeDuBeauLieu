@@ -68,6 +68,7 @@ public class ControllerAdvisor {
     public ResponseEntity<ErrorDTO> handleConsanguinityException(ConsanguinityException e) {
         return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.NOT_ACCEPTABLE);
     }
+
     @ExceptionHandler(AlreadyDeadException.class)
     public ResponseEntity<ErrorDTO> handleAlreadyDeadException(AlreadyDeadException e) {
         return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.NOT_ACCEPTABLE);

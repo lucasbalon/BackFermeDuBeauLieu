@@ -33,7 +33,7 @@ class SaleServiceImplTest {
 
     @Test
     void createSale_bullAlive() {
-        SaleForm saleForm = new SaleForm(LocalDate.now(), 100,1234, 456, "6789");
+        SaleForm saleForm = new SaleForm(LocalDate.now(), 100, 1234, 456, "6789");
         Bull bull = new Bull();
         bull.setStatus(Status.ALIVE);
 
@@ -47,7 +47,7 @@ class SaleServiceImplTest {
 
     @Test
     void createSale_bullSold() {
-        SaleForm saleForm = new SaleForm(LocalDate.now(), 100,1234, 456, "6789");
+        SaleForm saleForm = new SaleForm(LocalDate.now(), 100, 1234, 456, "6789");
         Bull bull = new Bull();
         bull.setStatus(Status.SOLD);
 
@@ -59,7 +59,7 @@ class SaleServiceImplTest {
 
     @Test
     void createSale_bullDead() {
-        SaleForm saleForm = new SaleForm(LocalDate.now(), 100,1234, 456, "6789");
+        SaleForm saleForm = new SaleForm(LocalDate.now(), 100, 1234, 456, "6789");
         Bull bull = new Bull();
         bull.setStatus(Status.DEAD);
 
@@ -71,7 +71,7 @@ class SaleServiceImplTest {
 
     @Test
     void createSale_bullNotFound() {
-        SaleForm saleForm = new SaleForm(LocalDate.now(), 100,1234, 456, "6789");
+        SaleForm saleForm = new SaleForm(LocalDate.now(), 100, 1234, 456, "6789");
 
         when(bovinService.findByLoopNumber(saleForm.bovinLoopNumber())).thenThrow(EntityNotFoundException.class);
 

@@ -5,11 +5,9 @@ import be.technobel.backfermedubeaulieu.bll.services.SaleService;
 import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.models.Sale;
 import be.technobel.backfermedubeaulieu.dal.models.enums.Status;
-import be.technobel.backfermedubeaulieu.dal.repositories.BullRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.SaleRepository;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.AlreadyDeadException;
 import be.technobel.backfermedubeaulieu.pl.models.forms.SaleForm;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service

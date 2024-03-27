@@ -7,5 +7,5 @@ public record PastureFullDTO(
         String actualBull,
         List<BovinShortDTO> availableCows,
         List<BovinShortDTO> pastureCows
-){
+) {
 }

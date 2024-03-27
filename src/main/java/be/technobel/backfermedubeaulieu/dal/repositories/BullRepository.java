@@ -1,8 +1,6 @@
 package be.technobel.backfermedubeaulieu.dal.repositories;
 
 import be.technobel.backfermedubeaulieu.dal.models.Bull;
-import be.technobel.backfermedubeaulieu.dal.models.Pasture;
-import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinShortDTO;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
@@ -10,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BullRepository extends BovinRepository<Bull> {
-    @Query("select t.loopNumber from Bull t where t.gender = true ")
+    @Query("select t.loopNumber from Bull t where t.gender = true  and t.status = 'ALIVE'")
     String[] findAllBovinsLoopNumber();
 
     @Query("select t.loopNumber from Bull t where (t.gender = true) and t.pasture.id = :id")
@@ -21,9 +19,9 @@ public interface BullRepository extends BovinRepository<Bull> {
     void deleteAllByPasture(long id);
 
 
-    @Query("select t from Bull t where (t.gender = true) and t.pasture.id = :id")
+    @Query("select t from Bull t where (t.gender = true) and t.pasture.id = :id and t.status = 'ALIVE'")
     Optional<Bull> findBullByPastureId(long id);
 
-    @Query("select t from Bull t where (t.gender = true) and (t.pasture.id is null)")
+    @Query("select t from Bull t where (t.gender = true) and (t.pasture.id is null) and t.status = 'ALIVE'")
     List<Bull> findAvailableBull();
 }

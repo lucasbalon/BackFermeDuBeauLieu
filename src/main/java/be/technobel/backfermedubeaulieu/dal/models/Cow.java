@@ -1,8 +1,9 @@
 package be.technobel.backfermedubeaulieu.dal.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -15,8 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 @Getter
-public class Cow extends Bull{
+public class Cow extends Bull {
     @OneToMany(mappedBy = "cow")
     private List<Scan> scans;
 }
-

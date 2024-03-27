@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BovinRepository<T extends Bull> extends JpaRepository<T, Long> {
-    @Query("select t from Bull t where t.loopNumber like %:loopNumber%")
+    @Query("select t from Bull t where t.loopNumber like %:loopNumber% and t.status = 'ALIVE'")
     List<T> findAllByLoopNumber(String loopNumber);
 
-    @Query("select t from Bull t where t.loopNumber = :loopNumber")
+    @Query("select t from Bull t where t.loopNumber = :loopNumber and t.status = 'ALIVE'")
     Optional<T> findByLoopNumber(String loopNumber);
 
-    @Query("select t.loopNumber from Bull t")
+    @Query("select t.loopNumber from Bull t where t.status = 'ALIVE'")
     String[] findAllBovinsLoopNumber();
 
     @Query("select t from Bull t where (t.father.id = :id or t.mother.id = :id) ")
@@ -27,7 +27,7 @@ public interface BovinRepository<T extends Bull> extends JpaRepository<T, Long> 
     @Query("update Bull b set b.pasture.id = :pastureId where b.loopNumber = :bullLoopnumber")
     void updatePasture(Long pastureId, String bullLoopnumber);
 
-    @Query("select t from Bull t where t.pasture.name = :name")
+    @Query("select t from Bull t where t.pasture.name = :name and t.status = 'ALIVE'")
     List<Bull> findAllBullsByPastureName(String name);
 
     @Query("select t from Bull t where t.pasture = :pasture and t.gender = true")

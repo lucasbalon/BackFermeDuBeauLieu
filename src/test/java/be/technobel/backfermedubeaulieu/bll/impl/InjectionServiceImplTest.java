@@ -2,9 +2,9 @@ package be.technobel.backfermedubeaulieu.bll.impl;
 
 import be.technobel.backfermedubeaulieu.bll.services.BovinService;
 import be.technobel.backfermedubeaulieu.bll.services.SubstanceService;
+import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.models.Injection;
 import be.technobel.backfermedubeaulieu.dal.models.Substance;
-import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.repositories.InjectionRepository;
 import be.technobel.backfermedubeaulieu.pl.models.forms.InjectionForm;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

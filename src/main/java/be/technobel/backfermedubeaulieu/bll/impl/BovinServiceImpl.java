@@ -23,7 +23,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto.fromEntityInjectionDTO;
@@ -81,7 +84,7 @@ public class BovinServiceImpl implements BovinService {
                         .mother(findMother(bovinForm))
                         .father(findFather(bovinForm)).build());
             }
-        }else {
+        } else {
             throw new EntityAlreadyExistsException("Bovin avec ce numéro de boucle existe déja");
         }
 
@@ -111,7 +114,7 @@ public class BovinServiceImpl implements BovinService {
                         .mother(null)
                         .father(null).build());
             }
-        }else {
+        } else {
             throw new EntityAlreadyExistsException("Bovin avec ce numéro de boucle existe déja");
         }
     }
@@ -177,7 +180,7 @@ public class BovinServiceImpl implements BovinService {
         Long bovinId;
         try {
             bovinId = cowRepository.findByLoopNumber(cowLoopnumber).orElseThrow(() -> new EntityNotFoundException("Vache n'existe pas")).getId();
-        }catch (Exception e) {
+        } catch (Exception e) {
             bovinId = bullRepository.findByLoopNumber(cowLoopnumber).orElseThrow(() -> new EntityNotFoundException("Vache n'existe pas")).getId();
         }
 
@@ -198,7 +201,6 @@ public class BovinServiceImpl implements BovinService {
         }
     }
 
-    //todo: s'arrete ici
     @Transactional
     @Override
     public void updatePastureBull(Long pastureId, String bullLoopnumber) {
@@ -252,6 +254,7 @@ public class BovinServiceImpl implements BovinService {
     public void setStatus(Status status, String loopNumber) {
         Bull bull = findByLoopNumber(loopNumber);
         bull.setStatus(status);
+        bull.setPasture(null);
         bullRepository.save(bull);
     }
 
@@ -299,7 +302,7 @@ public class BovinServiceImpl implements BovinService {
         Bull bull;
         try {
             bull = findFFather(findMother(bovinForm).getPasture());
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new EntityNotFoundException("Pas ou trop de Taureau sur la pature");
         }
 
@@ -311,7 +314,7 @@ public class BovinServiceImpl implements BovinService {
         try {
             return cowRepository.findByLoopNumber(bovinForm.motherLoopNumber())
                     .orElseThrow(() -> new EntityNotFoundException("Meuh meuh pas trouvé"));
-        }catch (ClassCastException exception) {
+        } catch (ClassCastException exception) {
             throw new EntityNotFoundException("La mère n'est pas une vache");
         }
 

@@ -33,23 +33,23 @@ public class JWTProvider {
         this.userDetailsService = userDetailsService;
     }
 
-    public String generateToken(String username){
+    public String generateToken(String username) {
         return TOKEN_PREFIX + JWT.create()
                 .withSubject(username)
                 .withExpiresAt(Instant.now().plusMillis(EXPIRES_AT))
                 .sign(Algorithm.HMAC512(JWT_SECRET));
     }
 
-    public String extractToken(HttpServletRequest request){
+    public String extractToken(HttpServletRequest request) {
         String header = request.getHeader(AUTH_HEADER);
 
-        if(header == null || !header.startsWith(TOKEN_PREFIX))
+        if (header == null || !header.startsWith(TOKEN_PREFIX))
             return null;
 
-        return header.replaceFirst(TOKEN_PREFIX,"");
+        return header.replaceFirst(TOKEN_PREFIX, "");
     }
 
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
 
         try {
 
@@ -67,12 +67,12 @@ public class JWTProvider {
             return user.isEnabled();
 
 
-        }catch (JWTVerificationException | UsernameNotFoundException ex) {
+        } catch (JWTVerificationException | UsernameNotFoundException ex) {
             return false;
         }
     }
 
-    public Authentication createAuthentication(String token){
+    public Authentication createAuthentication(String token) {
         DecodedJWT jwt = JWT.decode(token);
 
         String username = jwt.getSubject();

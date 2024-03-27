@@ -1,15 +1,12 @@
 package be.technobel.backfermedubeaulieu.bll.impl;
 
-import be.technobel.backfermedubeaulieu.bll.services.BovinService;
 import be.technobel.backfermedubeaulieu.bll.services.PastureService;
 import be.technobel.backfermedubeaulieu.dal.models.Bull;
 import be.technobel.backfermedubeaulieu.dal.models.Cow;
-import be.technobel.backfermedubeaulieu.dal.models.Pasture;
 import be.technobel.backfermedubeaulieu.dal.repositories.BovinRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.BullRepository;
 import be.technobel.backfermedubeaulieu.dal.repositories.CowRepository;
 import be.technobel.backfermedubeaulieu.pl.config.exceptions.EntityAlreadyExistsException;
-import be.technobel.backfermedubeaulieu.pl.models.dtos.BovinDto;
 import be.technobel.backfermedubeaulieu.pl.models.dtos.searchBovin.BovinSearchDTO;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.BovinForm;
 import be.technobel.backfermedubeaulieu.pl.models.forms.createBovin.IBovinForm;
@@ -23,7 +20,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static be.technobel.backfermedubeaulieu.pl.models.dtos.searchBovin.BovinSearchDTO.fromEntity;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -125,6 +125,7 @@ class BovinServiceImplTest {
 
         assertThat(result).hasSize(4);
     }
+
     @Test
     void findBovinsByLoopNumber_validLoopNumber_BovinsAsBulls() {
         String loopNumber = "123";
@@ -144,6 +145,7 @@ class BovinServiceImplTest {
 
         assertThat(result).hasSize(2);
     }
+
     @Test
     void findBovinsByLoopNumber_validLoopNumber_BovinsAsCows() {
         String loopNumber = "123";
@@ -179,6 +181,7 @@ class BovinServiceImplTest {
 
         assertThat(result).isEmpty();
     }
+
     @Test
     void isUnique_LoopNumberExistsInBull_ReturnsFalse() {
         IBovinForm bovinForm = mock(IBovinForm.class);
@@ -240,7 +243,7 @@ class BovinServiceImplTest {
     @Test
     void testCreateBovin_notUnique() {
         // Test data
-        BovinForm bovinForm = new BovinForm( "1234", "red", false, LocalDate.now(), true, "1235");
+        BovinForm bovinForm = new BovinForm("1234", "red", false, LocalDate.now(), true, "1235");
         Bull existingBullWithSameLoopNumber = new Bull();
         existingBullWithSameLoopNumber.setLoopNumber("1234");
 
@@ -249,6 +252,7 @@ class BovinServiceImplTest {
 
         assertThrows(EntityAlreadyExistsException.class, () -> bovinService.createBovin(bovinForm));
     }
+
     @Test
     void testShortCreateBovin_newBull() {
         // Test data
@@ -293,7 +297,7 @@ class BovinServiceImplTest {
     @Test
     void testFindAllCowLoopNumber() {
         // Given
-        String[] cowLoopNumbers = new String[] {"3333", "4444"};
+        String[] cowLoopNumbers = new String[]{"3333", "4444"};
 
         when(cowRepository.findAllBovinsLoopNumber()).thenReturn(cowLoopNumbers);
 
@@ -305,6 +309,7 @@ class BovinServiceImplTest {
 
         verify(cowRepository, times(1)).findAllBovinsLoopNumber();
     }
+
     @Test
     void testFindAllCowLoopNumber_NoLoopNumbers() {
         // Given
@@ -334,7 +339,7 @@ class BovinServiceImplTest {
     @Test
     void testFindAllBullLoopNumber() {
         // Given
-        String[] bullLoopNumbers = new String[] {"1111", "2222"};
+        String[] bullLoopNumbers = new String[]{"1111", "2222"};
 
         when(bullRepository.findAllBovinsLoopNumber()).thenReturn(bullLoopNumbers);
 
@@ -346,6 +351,7 @@ class BovinServiceImplTest {
 
         verify(bullRepository, times(1)).findAllBovinsLoopNumber();
     }
+
     @Test
     void testFindAllBullLoopNumber_NoLoopNumbers() {
         // Given
@@ -417,6 +423,7 @@ class BovinServiceImplTest {
         assertEquals(BovinSearchDTO.fromEntity(bull2), returnedList.get(1));
         verify(bullRepository, times(1)).findAll();
     }
+
     @Test
     void testFindAllBovins_NoBovins() {
         // Given

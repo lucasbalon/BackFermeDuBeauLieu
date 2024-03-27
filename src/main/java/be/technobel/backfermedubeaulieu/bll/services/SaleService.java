@@ -1,6 +1,5 @@
 package be.technobel.backfermedubeaulieu.bll.services;
 
-import be.technobel.backfermedubeaulieu.dal.models.Sale;
 import be.technobel.backfermedubeaulieu.pl.models.forms.SaleForm;
 
 public interface SaleService {
