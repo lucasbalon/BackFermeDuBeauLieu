@@ -1,7 +1,7 @@
 package be.technobel.backfermedubeaulieu.pl.models.forms.createBovin;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -13,7 +13,7 @@ public record ShortBovinForm(
         @NotBlank(message = "Robe: champ obligatoire")
         String coat,
         boolean gender,
-        @Past
+        @PastOrPresent
         LocalDate birthDate) implements IBovinForm {
 
 
