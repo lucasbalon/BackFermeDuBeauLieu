@@ -13,7 +13,7 @@ public record ShortBovinForm(
         @NotBlank(message = "Robe: champ obligatoire")
         String coat,
         boolean gender,
-        @PastOrPresent
+        @PastOrPresent(message = "La date doit être dans le passé ou aujourd'hui")
         LocalDate birthDate) implements IBovinForm {
 
 

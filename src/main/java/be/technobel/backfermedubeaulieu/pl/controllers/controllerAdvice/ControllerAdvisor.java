@@ -15,6 +15,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ControllerAdvisor {
@@ -26,11 +29,6 @@ public class ControllerAdvisor {
 
     @ExceptionHandler(MultipartException.class)
     public ResponseEntity<ErrorDTO> handleMultipartException(MultipartException e) {
-        return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDTO> handleValidationExceptions(MethodArgumentNotValidException e) {
         return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.BAD_REQUEST);
     }
 
@@ -72,6 +70,13 @@ public class ControllerAdvisor {
     @ExceptionHandler(AlreadyDeadException.class)
     public ResponseEntity<ErrorDTO> handleAlreadyDeadException(AlreadyDeadException e) {
         return new ResponseEntity<>(new ErrorDTO(e.getMessage(), ""), HttpStatus.NOT_ACCEPTABLE);
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        String errorMessage = e.getBindingResult().getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(", "));
+        return new ResponseEntity<>(new ErrorDTO(errorMessage, ""), HttpStatus.BAD_REQUEST);
     }
 
 
